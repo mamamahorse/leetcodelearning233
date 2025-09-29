@@ -36,7 +36,7 @@
 
 //     }
 // };
-//上述是对头节点特殊处理的方法，下面是使用虚拟头结点的做法。
+// 上述是对头节点特殊处理的方法，下面是使用虚拟头结点的做法。
 // class Solution {
 // public:
 //     ListNode* removeElements(ListNode* head, int val) 
@@ -59,7 +59,7 @@
        
 //     }
 // };
-//再来写一个递归。
+// 再来写一个递归。
 // class Solution {
 // public:
 //     ListNode* removeElements(ListNode* head, int val) 
