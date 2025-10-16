@@ -18,7 +18,19 @@ bool isRightAssociative(char op)
     return op == '^';
 }
 
-
+bool shouldPop(char top, char current) 
+{
+    if (top == '(') return false;
+    int topPrec = precedence(top);
+    int currPrec = precedence(current);
+    if (topPrec > currPrec) return true;
+    if (topPrec == currPrec && !isRightAssociative(current)) 
+    return true;
+    return false; //一定要记得返回false。相当于其余情况都false
+    //入栈的条件：要入栈的比栈内的优先级高，或者相等且右结合
+    //若不是，则出栈pop
+}//a ^ b ^ c 如果右结合则是a b c ^ ^
+//左结合则是a b ^ c ^
 vector<string> infixToPostfix(const string &expr) 
 {
     vector<string> output;
@@ -45,13 +57,12 @@ vector<string> infixToPostfix(const string &expr)
          else 
         { 
 
-            while (!st.empty() && precedence(st.top()) > 0 &&
-                   (precedence(st.top()) > precedence(ch) ||
-                    (precedence(st.top()) == precedence(ch) && !isRightAssociative(ch)))) {
-                output.push_back(string(1, st.top()));
-                st.pop();
+              while (!st.empty() && shouldPop(st.top(), ch)) 
+            {
+            output.push_back(string(1, st.top()));
+            st.pop();
             }
-            st.push(ch);
+    st.push(ch);
         }
     }
     while (!st.empty()) {
