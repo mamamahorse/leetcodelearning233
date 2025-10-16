@@ -16,7 +16,8 @@
 //                 // 找到当前左子树的最右侧节点，并且不能沿着连接返回上层
 //                 while (currLeft->right != NULL && currLeft->right != curr)
 //                     currLeft = currLeft->right;
-//                 //最右侧节点的右指针没有指向根，创建连接并往下一个左子树的根结点进行连接操作
+//                 //最右侧节点的右指针没有指向根
+//创建连接并往下一个左子树的根结点进行连接操作 以上都是为了找左子树最右
 //                 if (currLeft->right == NULL) 
 //                 {
 //                     currLeft->right = curr;
