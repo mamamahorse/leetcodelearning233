@@ -5,6 +5,17 @@
         "list": "cpp",
         "vector": "cpp",
         "xstring": "cpp",
-        "xiosbase": "cpp"
+        "xiosbase": "cpp",
+        "initializer_list": "cpp",
+        "stack": "cpp",
+        "utility": "cpp",
+        "xhash": "cpp",
+        "xutility": "cpp",
+        "new": "cpp",
+        "iosfwd": "cpp",
+        "iostream": "cpp",
+        "unordered_map": "cpp",
+        "system_error": "cpp",
+        "functional": "cpp"
     }
 }
