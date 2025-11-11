@@ -1,18 +1,16 @@
-// class Solution 
-// {
+// class Solution {
 // public:
 //     vector<vector<int>> levelOrder(TreeNode* root) 
-//     {   
+//     {
 //         queue<TreeNode*> que;
-//         if (root != NULL) que.push(root);
+//         if (root != NULL) 
+//         que.push(root);
 //         vector<vector<int>> result;
 //         while (!que.empty()) 
 //         {
 //             int size = que.size();
 //             vector<int> vec;
-//             // 这里一定要使用固定大小size，不要使用que.size()，因为que.size是不断变化的
-//             for (int i = 0; i < size; i++) 
-//             {
+//             for (int i = 0; i < size; i++) {
 //                 TreeNode* node = que.front();
 //                 que.pop();
 //                 vec.push_back(node->val);
@@ -24,4 +22,25 @@
 //         return result;
 //     }
 // };
-// // 迭代遍历用stack（模拟递归），层序遍历用queue
+// // 用递归写
+// class Solution
+// {
+//     public:
+//     void order(TreeNode* cur,vector<vector<int>>& result, int depth)
+//     {
+//         if(cur==nullptr)
+//         return;
+//         if(result.size()==depth)
+//         result.push_back(vector<int>());
+//         result[depth].push_back(cur->val);
+//         order(cur->left,result,depth+1);
+//         order(cur->right,result,depth+1);
+//     }
+//       vector<vector<int>> levelOrder(TreeNode* root) 
+//     {
+//         vector<vector<int>> result;
+//         int depth = 0;
+//         order(root, result, depth);
+//         return result;
+//     }
+// };
