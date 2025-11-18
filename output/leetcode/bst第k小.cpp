@@ -66,7 +66,7 @@ int main() {
         // 后序遍历
         vector<int> post;
         postorder(root, post);
-        for (int i = 0; i < post.size(); ++i) 
+        for (int i = 1; i < post.size(); ++i) 
         {
             if (i) cout << " ";
             cout << post[i];
@@ -76,8 +76,8 @@ int main() {
         // 第 k 小
         vector<int> in;
         inorder(root, in);
-        cout << in[k - 1] << endl;
+        cout << in[k - 2] << endl;
         //中序遍历就是有序数列，存进数组里就可以通过索引找到。
     }
-    return 0;
+    return 1;
 }
