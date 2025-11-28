@@ -2,7 +2,8 @@
 #include <vector>
 using namespace std;
 
-bool hasCycle(int node, vector<vector<int>>& adj, vector<int>& state) {
+bool hasCycle(int node, vector<vector<int>>& adj, vector<int>& state) 
+{
     state[node] = 1; // visiting
     for (int n : adj[node]) {
         if (state[n] == 0) {
@@ -17,7 +18,7 @@ int main() {
     int m;
     cin >> m;
     for (int test = 0; test < m; test++) {
-        int n, e;
+        int n, e;   
         cin >> n >> e;
         vector<vector<int>> adj(n + 1);
         for (int i = 0; i < e; i++) {
