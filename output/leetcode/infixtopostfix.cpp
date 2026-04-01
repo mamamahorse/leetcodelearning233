@@ -1,125 +1,160 @@
-// #include <iostream>
-// #include <string>
-// #include <vector>
-// #include <stack>
-// #include <cmath> 
-// using namespace std;
+#include <iostream>
+#include <string>
+#include <vector>
+#include <stack>
+#include <cmath>
+#include <cctype>
 
-// int precedence(char op)
-//  {
-//     if (op == '^') return 3;
-//     if (op == '*' || op == '/') return 2;
-//     if (op == '+' || op == '-') return 1;
-//     return 0;
-// }
+using namespace std;
 
-// bool isRightAssociative(char op) 
-// {
-//     return op == '^';
-// }
+// === 辅助函数区 ===
 
-// bool shouldPop(char top, char current) 
-// {
-//     if (top == '(') return false;
-//     int topPrec = precedence(top);
-//     int currPrec = precedence(current);
-//     if (topPrec > currPrec) return true;
-//     if (topPrec == currPrec && !isRightAssociative(current)) 
-//     return true;
-//     return false; //一定要记得返回false。相当于其余情况都false
-//     //入栈的条件：要入栈的比栈内的优先级高，或者相等且右结合
-//     //若不是，则出栈pop
-// }//a ^ b ^ c 如果右结合则是a b c ^ ^
-// //左结合则是a b ^ c ^
-// vector<string> infixToPostfix(const string &expr) 
-// {
-//     vector<string> output;
-//     stack<char> st;
-//     for (char ch : expr) 
-//     {
-//             if (isdigit(ch)) 
-//             {
-//                 output.push_back(string(1, ch));
-//             } 
-//         else if (ch == '(') 
-//         {
-//             st.push(ch);
-//         } 
-//         else if (ch == ')') 
-//         {
-//             while (!st.empty() && st.top() != '(') 
-//             {
-//                 output.push_back(string(1, st.top()));
-//                 st.pop();
-//             }
-//             st.pop(); 
-//         }
-//          else 
-//         { 
+// 获取运算符优先级
+int getPrecedence(const string& op) {
+    if (op == "^") return 3;
+    if (op == "*" || op == "/") return 2;
+    if (op == "+" || op == "-") return 1;
+    return 0;
+}
 
-//               while (!st.empty() && shouldPop(st.top(), ch)) 
-//             {
-//             output.push_back(string(1, st.top()));
-//             st.pop();
-//             }
-//     st.push(ch);
-//         }
-//     }
-//     while (!st.empty()) {
-//         output.push_back(string(1, st.top()));
-//         st.pop();
-//     }
-//     return output;
-// }
+// 判断是否为右结合运算符
+bool isRightAssociative(const string& op) {
+    return op == "^";
+}
 
-// void evaluatePostfix(vector<string> postfix) {
-//     stack<int> st;
+// 判断是否是运算符
+bool isOperator(const string& token) {
+    return token == "+" || token == "-" || token == "*" || token == "/" || token == "^";
+}
 
-//     for (size_t i = 0; i < postfix.size(); i++) 
-//     {
-//         if (i)
-//          cout << " ";
-//         cout << postfix[i];
-//     }
-//     cout << "\n";
+// 执行单次计算
+int calculate(int a, int b, const string& op) {
+    if (op == "+") return a + b;
+    if (op == "-") return a - b;
+    if (op == "*") return a * b;
+    if (op == "/") return a / b; // 注意：这里未处理除以0的情况
+    if (op == "^") return pow(a, b);
+    return 0;
+}
 
-//     for (size_t i = 0; i < postfix.size(); i++) 
-//     {
-//         if (isdigit(postfix[i][0])) 
-//         {
-//             st.push(postfix[i][0] - '0');
-//         } 
-//         else 
-//         {
-//             int b = st.top(); st.pop();
-//             int a = st.top(); st.pop();
-//             int res;
-//             if (postfix[i] == "+") res = a + b;
-//             else if (postfix[i] == "-") res = a - b;
-//             else if (postfix[i] == "*") res = a * b;
-//             else if (postfix[i] == "/") res = a / b;
-//             else if (postfix[i] == "^") res = pow(a, b);
-//             st.push(res);
+// === 核心逻辑区 ===
 
-//             postfix[i] = to_string(res);
-//             postfix.erase(postfix.begin() + (i - 2), postfix.begin() + i);
-//             i -= 2;
+// 中缀表达式转后缀表达式
+vector<string> infixToPostfix(const string &expr) {
+    vector<string> output;
+    stack<string> ops;
 
-//             for (size_t j = 0; j < postfix.size(); j++) {
-//                 if (j) cout << " ";
-//                 cout << postfix[j];
-//             }
-//             cout << "\n";
-//         }
-//     }
-// }
+    for (size_t i = 0; i < expr.length(); ++i) {
+        char ch = expr[i];
 
-// int main() {
-//     string expr;
-//     cin >> expr;
+        // 1. 处理数字 (支持多位数)
+        if (isdigit(ch)) {
+            string num(1, ch);
+            // 如果下一位还是数字，拼接起来
+            while (i + 1 < expr.length() && isdigit(expr[i + 1])) {
+                num += expr[++i];
+            }
+            output.push_back(num);
+        }
+        // 2. 处理左括号
+        else if (ch == '(') 
+        {
+            ops.push("(");
+        }
+        // 3. 处理右括号
+        else if (ch == ')') 
+        {
+            while (!ops.empty() && ops.top() != "(") 
+            {
+                output.push_back(ops.top());
+                ops.pop();
+            }
+            if (!ops.empty()) ops.pop(); // 弹出左括号
+        }
+        // 4. 处理运算符
+        else if (!isspace(ch)) { // 忽略空格，处理运算符
+            string curOp(1, ch);
+            while (!ops.empty() && ops.top() != "(") {
+                string topOp = ops.top();
+                int curPrec = getPrecedence(curOp);
+                int topPrec = getPrecedence(topOp);
 
-//     vector<string> postfix = infixToPostfix(expr);
-//     evaluatePostfix(postfix);
+                // 弹出栈顶元素的条件：
+                // 栈顶优先级更高，或者优先级相等且当前操作符是左结合
+                if (topPrec > curPrec || (topPrec == curPrec && !isRightAssociative(curOp))) {
+                    output.push_back(topOp);
+                    ops.pop();
+                } else {
+                    break;
+                }
+            }
+            ops.push(curOp);
+        }
+    }
 
-//     return 0;
-// }
+    // 将栈中剩余的运算符全部输出
+    while (!ops.empty()) {
+        output.push_back(ops.top());
+        ops.pop();
+    }
+    return output;
+}
+
+// 打印当前的表达式列表
+void printStep(const vector<string>& tokens) {
+    for (size_t i = 0; i < tokens.size(); i++) {
+        if (i > 0) cout << " ";
+        cout << tokens[i];
+    }
+    cout << endl;
+}
+
+// 后缀表达式求值 (带步骤显示)
+void evaluatePostfixWithSteps(vector<string> postfix) {
+    // 先打印初始状态
+    printStep(postfix);
+
+    // 我们需要通过不断修改 postfix 数组来模拟“规约”过程
+    // 为了安全地在遍历中删除元素，我们使用 while 循环手动控制索引
+    size_t i = 0;
+    while (i < postfix.size()) {
+        // 如果遇到运算符，进行计算
+        if (isOperator(postfix[i])) {
+            // 获取操作数（运算符前面的两个数）
+            // 注意：因为是后缀，顺序是 ... a b op ...
+            int b = stoi(postfix[i - 1]);
+            int a = stoi(postfix[i - 2]);
+            string op = postfix[i];
+
+            int res = calculate(a, b, op);
+
+            // 修改 vector：用结果替换 "a b op" 这一段
+            // 1. 将运算符位置的值改为计算结果
+            postfix[i] = to_string(res);
+            
+            // 2. 删除运算符前面的两个操作数
+            // erase(start, end) 删除范围是 [start, end)
+            // 我们要删除 i-2 和 i-1 位置的元素
+            postfix.erase(postfix.begin() + i - 2, postfix.begin() + i);
+
+            // 3. 打印当前步骤
+            printStep(postfix);
+
+            // 4. 调整索引：
+            // 因为删除了2个元素，原本在 i 位置的新结果现在跑到了 i-2 的位置
+            // 下一次循环应该从这个新结果的后面继续检查，所以索引回退
+            i -= 2; 
+        }
+        i++;
+    }
+}
+
+int main() {
+    string expr;
+    // 建议使用 getline 以支持包含空格的输入，虽然题目样例可能没有空格
+    if (getline(cin, expr)) {
+        vector<string> postfix = infixToPostfix(expr);
+        evaluatePostfixWithSteps(postfix);
+    }
+    return 0;
+}

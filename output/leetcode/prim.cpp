@@ -31,7 +31,7 @@ int main() {
         {
             minval=minDist[j];
             cur=j;
-        }
+    }
     }
     isInTree[cur]=true;//第二步，找可连接的最短的边，标记，加入生成树   
     for(int j=1;j<=v;j++)//第三步，更新mindist数组，观察cur直接相连的点

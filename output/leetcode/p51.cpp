@@ -57,3 +57,21 @@
 //         return result;
 //     }
 // };
+bool isValid(int row, int col, vector<string>& chessboard, int n)
+{
+    for (int i-0;i < row; i++)
+    {
+        if(chessboard[i][column]== 'Q')
+        return false;
+    }
+    for(int i= row - 1, j = col - 1; i>=0&&j>=0; i--, j--)
+    {
+        if(chessboard[i][j]== 'Q')
+        return false;
+    }
+    for(int i = row - 1, j = col + 1; i>=0&&j <n; i--, j++)
+    {
+        if(chessboard[i][j]== 'Q')
+        return false;
+    }
+}

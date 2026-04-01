@@ -59,7 +59,7 @@ int main() {
         // 只有一个字符时特判
         if (huffman.size() == 1) 
         {
-            cout << freq[s[0]] * s.size() << endl;
+            cout << freq[s[0]] << endl;
             continue;
         }
 
