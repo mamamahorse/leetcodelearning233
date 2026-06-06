@@ -16,6 +16,7 @@
         "iostream": "cpp",
         "unordered_map": "cpp",
         "system_error": "cpp",
-        "functional": "cpp"
+        "functional": "cpp",
+        "array": "cpp"
     }
 }
